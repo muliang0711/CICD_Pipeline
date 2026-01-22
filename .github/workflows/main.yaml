@@ -34,11 +34,11 @@ jobs:
         with:
           context: ./app/sender
           push: true
-          tags: your-username/sender-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sender-app:latest
 
       - name: Build and push Listener
         uses: docker/build-push-action@v5
         with:
           context: ./app/listener
           push: true
-          tags: your-username/listener-app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/listener-app:latest
