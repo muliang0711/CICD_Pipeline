@@ -1,13 +1,13 @@
 
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /sender
 
 COPY package*.json ./
 RUN npm install --production
 
-COPY app ./app
+COPY . ./
 
 
 EXPOSE 3000
-CMD ["node", "app/index.js"]
+CMD ["node", "sender.js"]
