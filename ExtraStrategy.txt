@@ -1,0 +1,27 @@
+The Problem with Single-Stage BuildsWhen you build your current Node.js app, your image contains:The Code.The node_modules (which can be huge).
+The Build Tools (compilers, npm cache, git, etc.).Source files (like READMEs or test files) that you don't actually need to run the app.
+This makes your image heavy (fat) and less secure because it contains extra tools that a hacker could use if they got inside.
+The Solution: Multi-Stage BuildsYou use one Dockerfile, but you divide it into two stages.
+Stage 1 (The Builder): You use a "heavy" image to install everything and compile your code.
+Stage 2 (The Runner): You start a brand-new, "tiny" image and only copy the final, ready-to-run files from Stage 1.
+
+Example of a Multi-Stage Dockerfile:Dockerfile
+
+# STAGE 1: The Builder
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install          # We do the heavy lifting here
+COPY . .
+
+# STAGE 2: The Final Production Image
+FROM node:18-slim        # A much smaller, cleaner version of Node
+WORKDIR /app
+# We ONLY grab the finished files from the builder stage
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/index.js ./index.js
+
+CMD ["node", "index.js"]
+Why is this "Next Level"?FeatureSingle Stage (What you have)Multi-Stage (The "Split")Image SizeLarge (e.g., 900MB)Tiny (e.g., 100MB)SecurityHigh (contains npm, compilers)Very High (contains only your app)SpeedSlower to download/uploadVery fast to ship to servers
+
+this is good when your project is typescript , you can just copy the dist/ to second image 
