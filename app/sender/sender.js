@@ -21,6 +21,8 @@ app.get('/call-listener', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Sender running on port ${port}`);
 });
+
+module.exports = app;

@@ -10,6 +10,8 @@ app.get('/receive', (req, res) => {
   });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Listener app listening at http://localhost:${port}`);
 });
+
+module.exports = app;

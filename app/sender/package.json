@@ -2,9 +2,10 @@
   "name": "project1_cicd",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "sender.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node sender.js",
+    "test": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -13,5 +14,9 @@
   "dependencies": {
     "axios": "^1.13.2",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
   }
 }
