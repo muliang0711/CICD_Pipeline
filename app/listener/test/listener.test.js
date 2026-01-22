@@ -1,10 +1,21 @@
 const request = require('supertest');
 const express = require('express');
-const app = require('../listener');
+const { app, server } = require('../listener');
 
 describe('Listener Service', () => {
+
+  afterAll((done) => {
+    // Properly close the server to prevent Jest from hanging
+    server.close(done);
+  });
   
   describe('GET /receive', () => {
+
+    // ADD THIS BLOCK:
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
+
     it('should return a successful response with reply and timestamp', async () => {
       const response = await request(app)
         .get('/receive')
@@ -49,6 +60,12 @@ describe('Listener Service', () => {
   });
 
   describe('Server', () => {
+
+    // ADD THIS BLOCK:
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
+
     it('should be listening on port 4000', () => {
       // This is tested by the fact that the app module exports the server
       expect(app).toBeDefined();
@@ -56,6 +73,11 @@ describe('Listener Service', () => {
   });
 
   describe('Route availability', () => {
+    // ADD THIS BLOCK:
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
+
     it('should return 404 for non-existent routes', async () => {
       await request(app)
         .get('/nonexistent')

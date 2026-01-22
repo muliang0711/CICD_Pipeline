@@ -1,13 +1,20 @@
 const request = require('supertest');
 const axios = require('axios');
-const app = require('../sender');
+const { app, server } = require('../sender');
 
 // Mock axios to avoid actual network calls during testing
 jest.mock('axios');
 
 describe('Sender Service', () => {
 
-  describe('GET /health', () => {
+  afterAll((done) => {
+    // Properly close the server to prevent Jest from hanging
+    server.close(done);
+  });
+    // ADD THIS BLOCK:
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
     it('should return health status as ok', async () => {
       const response = await request(app)
         .get('/health')
@@ -125,6 +132,10 @@ describe('Sender Service', () => {
   });
 
   describe('Integration scenarios', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should handle successful listener communication flow', async () => {
       const mockListenerResponse = {
         reply: 'Hello Sender! This is the Listener on port 4000.',
@@ -155,7 +166,13 @@ describe('Sender Service', () => {
       await request(app)
         .get('/health')
         .expect(200);
-      expect(axios.get).not.toHaveBeenCalled();
+      expect(axios.get).toHaveBeenCalledTimes(0);
+
+      // Reset mock to verify call-listener makes a call
+      jest.clearAllMocks();
+      axios.get.mockResolvedValue({
+        data: { reply: 'test', timestamp: new Date() }
+      });
 
       // Call listener endpoint
       await request(app)
@@ -164,4 +181,3 @@ describe('Sender Service', () => {
       expect(axios.get).toHaveBeenCalledTimes(1);
     });
   });
-});

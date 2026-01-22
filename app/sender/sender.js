@@ -25,4 +25,4 @@ const server = app.listen(port, () => {
   console.log(`Sender running on port ${port}`);
 });
 
-module.exports = app;
+module.exports = { app, server };
