@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=docker
     networks:
       - app-network
 
@@ -15,7 +15,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=docker
     networks:
       - app-network
 
