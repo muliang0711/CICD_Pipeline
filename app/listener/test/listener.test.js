@@ -1,21 +1,20 @@
 const request = require('supertest');
 const express = require('express');
-
-// Load environment variables for testing
-const path = require('path');
-const environment = process.env.NODE_ENV || 'local';
-require('dotenv').config({ path: path.resolve(__dirname, `../.env.${environment}`) });
-
-const app = require('../listener');
+const { app, server } = require('../listener');
 
 describe('Listener Service', () => {
 
+  afterAll((done) => {
+    // Properly close the server to prevent Jest from hanging
+    server.close(done);
+  });
+  
   describe('GET /receive', () => {
 
     // ADD THIS BLOCK:
-    beforeEach(() => {
-      jest.clearAllMocks(); // This resets the call count to 0
-    });
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
 
     it('should return a successful response with reply and timestamp', async () => {
       const response = await request(app)
@@ -24,7 +23,7 @@ describe('Listener Service', () => {
 
       expect(response.body).toHaveProperty('reply');
       expect(response.body).toHaveProperty('timestamp');
-      expect(response.body.reply).toBe(`Hello Sender! This is the Listener on port ${process.env.PORT}.`);
+      expect(response.body.reply).toBe('Hello Sender! This is the Listener on port 4000.');
       expect(response.body.timestamp).toBeDefined();
     });
 
@@ -63,11 +62,11 @@ describe('Listener Service', () => {
   describe('Server', () => {
 
     // ADD THIS BLOCK:
-    beforeEach(() => {
-      jest.clearAllMocks(); // This resets the call count to 0
-    });
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
 
-    it(`should be listening on port ${process.env.PORT}`, () => {
+    it('should be listening on port 4000', () => {
       // This is tested by the fact that the app module exports the server
       expect(app).toBeDefined();
     });
@@ -75,9 +74,9 @@ describe('Listener Service', () => {
 
   describe('Route availability', () => {
     // ADD THIS BLOCK:
-    beforeEach(() => {
-      jest.clearAllMocks(); // This resets the call count to 0
-    });
+  beforeEach(() => {
+    jest.clearAllMocks(); // This resets the call count to 0
+  });
 
     it('should return 404 for non-existent routes', async () => {
       await request(app)
