@@ -15,4 +15,4 @@ package-lock.json
 - 精确版本 + hash
 - 具体、严格
 text111122
-testing2 - git command : "gh pr create --base main --head test1 --title "test1" --body "test1""
+testing2 - git command : "gh pr create --base main --head test1 --title "test1" --body "test1""12
